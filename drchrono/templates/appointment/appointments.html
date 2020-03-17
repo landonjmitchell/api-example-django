@@ -1,0 +1,74 @@
+
+{% block appointments %}
+
+<div class="col-md-4 pt-2 float-left todays-appointments border-right bg-secondary">
+    <h5 class="pl-2 text-light">{% now "m/d/y D" %}</h5>
+    {% for app in todays_appointments %}
+        <a href="{% url 'appointment_detail' app.id  %}">
+        <div class="card mb-1 text-left">
+            <div class="row no-gutters">
+                <div class="col-md-2">
+                    {% if app.patient.gender == "Male" %}
+                        <img src="../../static/images/patient_m.png" class="card-img rounded-circle bg-light m-2" style="max-width: 100px;">
+                    {% else %}
+                        <img src="../../static/images/patient_f.png" class="card-img rounded-circle bg-light m-2" style="max-width: 100px;">
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body text-left">
+                        <h5 class="card-title patient_name mb-0">{{ app.patient.last_name }}, {{app.patient.first_name }}</h5>
+                        <p class="card-text">{{ app.scheduled_time|date:"m/d" }} {{ app.scheduled_time|time:"H:iA" }}</p>
+                        
+                    </div>
+                </div>
+                <div class="col-md-4 mt-3 text-center">
+                    {% if not app.status == "" and not app.status == None %}
+                    <p>{{ app.status }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </a>
+    {% endfor %}
+</div>
+
+{% endblock appointments %}
+
+
+<!-- {% for app in appointments %}
+{{ app.id }}
+<tr>
+    <td>{% if app.patient.gender == "Male" %}
+        <img src="../static/images/patient_m.png" class="card-img rounded-circle" style="max-width: 25px;">
+        {% else %}
+        <img src="../static/images/patient_f.png" class="card-img rounded-circle" style="max-width: 25px;">
+        {% endif %}
+    </td>
+    <td>{{ app.patient.last_name }}, {{app.patient.first_name }}</td>
+    <td>{{ app.patient.date_of_birth }}</td>
+    <td>{{ app.exam_room }}</td>
+    <td>{{ app.scheduled_time }}</td>
+    <td>{{ app.duration }} min</td>
+
+    {% if app.status == "" or app.status == None %}
+    <td> --- </td>
+    {% else %}
+    <td>{{ app.status }}</td>
+    {% endif %}
+
+
+    {% if app.check_in_time %}
+    <td>{{ app.check_in_time|time }}</td>
+    {% if app.start_time %}
+    <td>{{ app.start_time|timesince:app.check_in_time }}</td>
+    {% else %}
+    <td>{{ now|timesince:app.check_in_time }}</td>
+    {% endif %}
+    {% else %}
+    <td> --- </td>
+    <td> --- </td>
+    {% endif %}
+
+</tr>
+{% endfor %}
+</table> -->
