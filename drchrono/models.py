@@ -49,12 +49,6 @@ class Appointment(models.Model):
     class Meta:
         ordering = ['scheduled_time']
 
-    def check_in(self):
-        self.check_in_time = datetime.datetime.now()
-
-    def start(self):
-        self.start_time = datetime.datetime.now()
-
     def __str__(self):
         if self.patient:
             return 'Appointment({} {} - {})'.format(self.patient.first_name, self.patient.last_name, self.scheduled_time)
