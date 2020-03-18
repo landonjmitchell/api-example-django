@@ -13,6 +13,8 @@
     </nav>
 
     <div class="col-md-8 float-right p-4">
+
+        {% if appointment %}
         <div class="row card mb-3 mt-3">
             <div class="card-body">
                 <h1>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</h1>
@@ -58,18 +60,9 @@
 
                 </ul>
 
-                
-
-
-
-
-<!-- 
-                <button type="button" class="btn btn-primary">Start Visit</button>
-                <button type="button" class="btn btn-success">Complete Visit</button>
-                <button type="button" class="btn btn-danger">Cancel Appointment</button> -->
-
             </div>
         </div>
+        {% endif %}
     </div>
 
 {% block appointments %} {% include './appointments.html' %} {% endblock appointments %}
