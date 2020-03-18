@@ -1,7 +1,7 @@
 import datetime
 
 from django.shortcuts import redirect
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, FormView
 from social_django.models import UserSocialAuth
 from django.http import HttpResponseRedirect
 
@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 import api_helpers
 from drchrono.endpoints import DoctorEndpoint, AppointmentEndpoint, PatientEndpoint
 from .models import Doctor, Appointment
-from .forms import StatusForm
+from .forms import StatusForm, CheckInForm
 
 
 class SetupView(TemplateView):
@@ -148,4 +148,12 @@ class AppointmentDetailView(DetailView):
         return HttpResponseRedirect(self.request.path_info)
 
         
+class CheckInView(FormView):
+    form_class = CheckInForm
+    template_name = 'check_in/check_in.html'
 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+            status = form.cleaned_data['status']
