@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 
 import api_helpers
 from drchrono.endpoints import DoctorEndpoint, AppointmentEndpoint, PatientEndpoint
-from .models import Doctor, Appointment
+from .models import Doctor, Appointment, Patient
 from .forms import StatusForm, CheckInForm
 
 
@@ -156,4 +156,23 @@ class CheckInView(FormView):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            status = form.cleaned_data['status']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            social_security_number = form.cleaned_data['social_security_number']
+
+            patient = Patient.objects.first(first_name=first_name, last_name=last_name, social_security_number=social_security_number)
+
+            if not patient:
+                # TODO: display patient not found error
+                pass
+            else:
+                date = datetime.datetime.today
+                statuses = ['', None]
+                appointment = Appointment.objects.first(patient=patient, scheduled_time__date=date, status__in=statuses)
+
+                if not appointment:
+                    # TODO: display no matching appointment error
+                    pass
+                else:
+                    # TODO: display success, option to edit demographics or check_in
+                    pass
