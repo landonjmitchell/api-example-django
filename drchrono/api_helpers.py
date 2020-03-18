@@ -1,8 +1,8 @@
 import datetime
+import pytz
 
 from .models import Doctor, Patient, Appointment
-
-from endpoints import PatientEndpoint, AppointmentEndpoint
+from endpoints import PatientEndpoint, AppointmentEndpoint, DoctorEndpoint
 
 def populate_doctors(endpoint):
     """
@@ -17,7 +17,6 @@ def populate_doctors(endpoint):
         }
 
         doctor, created = Doctor.objects.update_or_create(pk=doctor_data['id'], defaults=data)
-
 
 def populate_patients(endpoint, doctor):
     """
@@ -47,7 +46,12 @@ def populate_appointments(endpoint, doctor):
         """
         Populate Appointment table with appointments belonging to the given doctor.
         """
-        appointments = endpoint.list({'doctor': doctor.id, 'date': str(datetime.date.today())})
+
+        # TODO: figure out dates/timezones
+        date = datetime.datetime.now(tz=pytz.timezone(
+            'America/Los_Angeles')).strftime('%Y-%m-%d')
+
+        appointments = endpoint.list({'doctor': doctor.id, 'date': date})
         for appointment_data in appointments:
             patient = Patient.objects.get(id=appointment_data['patient'])
             data = {
@@ -62,3 +66,24 @@ def populate_appointments(endpoint, doctor):
 
             appointment, created = Appointment.objects.update_or_create(
                 defaults=data, pk=appointment_data['id'])
+
+def get_avg_wait_time(endpoint, doctor):
+    """
+    Return average wait time for doctor for all appointments.
+    """
+    num_appointments = 0
+    total_wait_time = 0
+
+    for app in Appointment.objects.all():
+        if app.wait_time and app.status in ('Complete', 'In Session'):
+            num_appointments += 1
+            total_wait_time += app.wait_time
+        elif app.status == 'Checked In' and app.check_in_time:
+            num_appointments += 1
+            total_wait_time += datetime.datetime.now() - app.check_in_time
+    
+    if total_wait_time:
+        return num_appointments // total_wait_time
+    else:
+        return 0
+
