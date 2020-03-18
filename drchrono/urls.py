@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^setup/$', views.SetupView.as_view(), name='setup'),
     url(r'^welcome/$', views.DoctorWelcome.as_view(), name='setup'),
     url(r'^appointment/(?P<pk>[A-Za-z0-9]+)/$', views.AppointmentDetailView.as_view(), name='appointment_detail'),
+    url(r'^appointment/$',
+        views.AppointmentsView.as_view(), name='appointments'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
 ]
