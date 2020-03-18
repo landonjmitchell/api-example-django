@@ -45,6 +45,7 @@ class Appointment(models.Model):
     status = models.CharField(max_length=20, null=True)
     check_in_time = models.DateTimeField(null=True)
     start_time = models.DateTimeField(null=True)
+    wait_time = models.IntegerField(null=True)
 
     class Meta:
         ordering = ['scheduled_time']
