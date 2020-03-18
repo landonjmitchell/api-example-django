@@ -2,5 +2,6 @@ from django import forms
 from django.forms import widgets
 
 
-# Add your forms here
+class StatusForm(forms.Form):
+    status = forms.CharField(max_length=25)
 
