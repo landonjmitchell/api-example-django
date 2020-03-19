@@ -24,6 +24,8 @@
                 <div class="col-md-4 mt-3 text-center">
                     {% if not app.status == "" and not app.status == None %}
                     <p>{{ app.status }}</p>
+                    {% else %}
+                    <p>--</p>
                     {% endif %}
                     <p>Wait Time: {{ app.wait_time }}</p>
                 </div>
