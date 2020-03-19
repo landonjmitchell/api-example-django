@@ -1,6 +1,6 @@
 import datetime
 
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import TemplateView, DetailView, FormView
 from social_django.models import UserSocialAuth
 from django.http import HttpResponseRedirect
@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 import api_helpers
 from drchrono.endpoints import DoctorEndpoint, AppointmentEndpoint, PatientEndpoint
 from .models import Doctor, Appointment, Patient
-from .forms import StatusForm, CheckInForm
+from .forms import StatusForm, CheckInForm, DemographicForm
 
 
 class SetupView(TemplateView):
@@ -98,7 +98,6 @@ class AppointmentDetailView(DetailView):
     form_class = StatusForm
 
     # FIXME: simplify getting doctor and average wait time
-
     def get_context_data(self, **kwargs):
         context = super(AppointmentDetailView, self).get_context_data(**kwargs)
 
@@ -125,14 +124,12 @@ class AppointmentDetailView(DetailView):
             response = appointment_endpoint.update(appointment_id, {'status': status})
 
             # FIXME: find a better way to update/refresh template view
-
             access_token = self.request.session['access_token']
             doctor_id = self.request.session['doctor_id']
             doctor = Doctor.objects.get(pk=doctor_id)
             api_helpers.populate_appointments(appointment_endpoint, doctor)
 
             # TODO: move logic to model methods?
-
             app = Appointment.objects.get(pk=appointment_id)
             if status == 'Checked In':
                 app.check_in_time = datetime.datetime.now()
@@ -176,3 +173,17 @@ class CheckInView(FormView):
                 else:
                     # TODO: display success, option to edit demographics or check_in
                     pass
+
+# TODO: convert to class based view for consistency
+def update_demographics(request, patient_id):
+    p = get_object_or_404(Patient, pk=patient_id)
+    if request.POST:
+        form = DemographicForm(request.POST, instance=l)
+        if form.is_valid():
+            patient = form.save()
+            return redirect('update_demographics', patient.id)
+
+    else:
+        form = DemographicForm(instance=p)
+
+    return render(request, 'check_in/demographics.html', {'form': form})

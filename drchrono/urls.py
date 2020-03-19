@@ -21,6 +21,8 @@ urlpatterns = [
         name='appointments'),
 
     url(r'^kiosk/$', views.CheckInView.as_view(), name='check_in'),
+    url('^demographics/(?P<patient_id>[\w-]+)/$',
+        views.update_demographics, name='update_demographics'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('social.apps.django_app.urls', namespace='social')),
