@@ -9,7 +9,7 @@ class StatusForm(forms.Form):
 class CheckInForm(forms.Form):
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100)
-    # social_security_number = forms.CharField(max_length=30)
+    social_security_number = forms.CharField(max_length=30)
     
 
 class DemographicForm(forms.ModelForm):

@@ -160,22 +160,27 @@ class CheckInView(FormView):
     def form_valid(self, form):
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
-        # social_security_number = form.cleaned_data['social_security_number']
+        social_security_number = form.cleaned_data['social_security_number']
 
         patient = Patient.objects.filter(
                     first_name=first_name,
                     last_name=last_name,
+                    social_security_number=social_security_number
                     ).first()
 
         if not patient:
             # TODO: display patient not found error
             pass
         else:
+            # Pretty sure there is a better way to do this
             self.success_url = '../demographics/' + str(patient.id)
 
-            date = datetime.datetime.today()
-            statuses = ['', None]
-            appointment = Appointment.objects.filter(patient=patient, status__in=statuses).first()
+            # TODO: Ensure appointment is for today and not already checked in
+            # date = datetime.datetime.today()
+            # statuses = ['', None]
+            # appointment = Appointment.objects.filter(patient=patient, status__in=statuses).first()
+
+            appointment = Appointment.objects.filter(patient=patient).first()
 
             if not appointment:
                 # TODO: display no matching appointment error
@@ -192,7 +197,7 @@ class CheckInView(FormView):
 
                 return super(CheckInView, self).form_valid(form)
 
-
+        # TODO: deal with invalid form
 
 # TODO: convert to class based view for consistency
 def update_demographics(request, patient_id):
