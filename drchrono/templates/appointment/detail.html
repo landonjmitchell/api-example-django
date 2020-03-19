@@ -23,7 +23,24 @@
         </div>
         <div class="row card mb-3 mt-3">
             <div class="card-body">
-                <p>Other Appointment Data goes here.</p>
+                <h4>Patient Data</h4>
+                <ul>
+                    <li>DOB: {{ appointment.patient.date_of_birth }}</li>
+                    <li>Gender: {{ appointment.patient.gender }}</li>
+                    <li>Email: {{ appointment.patient.email }}</li>
+                    <li>Phone: {{ appointment.patient.home_phone }}</li>
+                    <li>SSN: {{ appointment.patient.social_security_number }}</li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="row card mb-3 mt-3">
+            <div class="card-body">
+                <h4>Appointment Data</h4>
+                <ul>
+                    <li>Exam Room: {{ appointment.exam_room }}</li>
+                    <li>Gender: {{ appointment.exam_room }}</li>
+                </ul>
             </div>
         </div>
         <div class="row card mb-3 mt-3">
