@@ -15,6 +15,13 @@ class Doctor(models.Model):
 
 
 class Patient(models.Model):
+    STATES = [(x, x) for x in \
+            ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
+              "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+              "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+              "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+              "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]]
+              
     id = models.IntegerField(primary_key=True)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=100)
@@ -24,7 +31,7 @@ class Patient(models.Model):
     social_security_number = models.CharField(max_length=30, null=True)
     address = models.CharField(max_length=250, null=True)
     city = models.CharField(max_length=100, blank=True)
-    state = models.CharField(max_length=2, blank=True)
+    state = models.CharField(max_length=2, choices=STATES)
     zip_code = models.CharField(max_length=10, blank=True)
     email = models.EmailField(null=True, blank=True)
     home_phone = models.CharField(max_length=25, null=True, blank=True)
