@@ -23,12 +23,12 @@ class Patient(models.Model):
     date_of_birth = models.DateField(null=True)
     social_security_number = models.CharField(max_length=30, null=True)
     address = models.CharField(max_length=250, null=True)
-    city = models.CharField(max_length=100, null=True)
-    state = models.CharField(max_length=2, null=True)
-    zip_code = models.CharField(max_length=10, null=True)
-    email = models.EmailField(null=True)
-    home_phone = models.CharField(max_length=25, null=True)
-    cell_phone = models.CharField(max_length=25, null=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=2, blank=True)
+    zip_code = models.CharField(max_length=10, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    home_phone = models.CharField(max_length=25, null=True, blank=True)
+    cell_phone = models.CharField(max_length=25, null=True, blank=True)
 
     def __str__(self):
         return 'Patient({}, {})'.format(self.last_name, self.first_name)
