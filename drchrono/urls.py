@@ -20,7 +20,7 @@ urlpatterns = [
         views.AppointmentsView.as_view(), 
         name='appointments'),
 
-    url(r'^kiosk/$', views.CheckInView.as_view(), name='check_in'),
+    url(r'^check_in/$', views.CheckInView.as_view(), name='check_in'),
     url('^demographics/(?P<patient_id>[\w-]+)/$',
         views.update_demographics, name='update_demographics'),
 
