@@ -1,15 +1,22 @@
 import datetime
 
-from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import TemplateView, DetailView, FormView
 from social_django.models import UserSocialAuth
 from django.http import HttpResponseRedirect
 
+from django.shortcuts import (
+    redirect,
+    render,
+    get_object_or_404)
 
-import api_helpers
-from drchrono.endpoints import DoctorEndpoint, AppointmentEndpoint, PatientEndpoint
+from drchrono.endpoints import (
+    DoctorEndpoint, 
+    AppointmentEndpoint, 
+    PatientEndpoint)
+
 from .models import Doctor, Appointment, Patient
 from .forms import StatusForm, CheckInForm, DemographicForm
+import api_helpers
 
 
 class SetupView(TemplateView):
@@ -136,7 +143,8 @@ class AppointmentDetailView(DetailView):
             elif status == 'In Session':
                 app.start_time = datetime.datetime.now()
                 if app.check_in_time:
-                    app.wait_time = app.start_time - app.check_in_time
+                    app.wait_time = app.start_time.replace(
+                        tzinfo=None) - app.check_in_time.replace(tzinfo=None)
                 else:
                     app.wait_time = 0
             elif status == 'Cancelled':
@@ -149,39 +157,55 @@ class CheckInView(FormView):
     form_class = CheckInForm
     template_name = 'check_in/check_in.html'
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+    def form_valid(self, form):
+        first_name = form.cleaned_data['first_name']
+        last_name = form.cleaned_data['last_name']
+        # social_security_number = form.cleaned_data['social_security_number']
 
-        if form.is_valid():
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            social_security_number = form.cleaned_data['social_security_number']
+        patient = Patient.objects.filter(
+                    first_name=first_name,
+                    last_name=last_name,
+                    ).first()
 
-            patient = Patient.objects.first(first_name=first_name, last_name=last_name, social_security_number=social_security_number)
+        if not patient:
+            # TODO: display patient not found error
+            pass
+        else:
+            self.success_url = '../demographics/' + str(patient.id)
 
-            if not patient:
-                # TODO: display patient not found error
+            date = datetime.datetime.today()
+            statuses = ['', None]
+            appointment = Appointment.objects.filter(patient=patient, status__in=statuses).first()
+
+            if not appointment:
+                # TODO: display no matching appointment error
                 pass
             else:
-                date = datetime.datetime.today
-                statuses = ['', None]
-                appointment = Appointment.objects.first(patient=patient, scheduled_time__date=date, status__in=statuses)
+                access_token = self.request.session['access_token']
+                endpoint = AppointmentEndpoint(access_token)
+                check_in_time = datetime.datetime.now()
+                data = {'status': 'Checked In', 
+                        'check_in_time': check_in_time}
 
-                if not appointment:
-                    # TODO: display no matching appointment error
-                    pass
-                else:
-                    # TODO: display success, option to edit demographics or check_in
-                    pass
+                response = endpoint.update(appointment.id, data)
+                updated_appointment, created = Appointment.objects.update_or_create(pk=appointment.id, defaults=data)
+
+                return super(CheckInView, self).form_valid(form)
+
+
 
 # TODO: convert to class based view for consistency
 def update_demographics(request, patient_id):
     p = get_object_or_404(Patient, pk=patient_id)
     if request.POST:
-        form = DemographicForm(request.POST, instance=l)
+        form = DemographicForm(request.POST, instance=p)
         if form.is_valid():
             patient = form.save()
-            return redirect('update_demographics', patient.id)
+            
+            # TODO: update appointment status to Checked In
+            # TODO: Display confirmation message
+
+            return redirect('check_in')
 
     else:
         form = DemographicForm(instance=p)

@@ -80,7 +80,9 @@ def get_avg_wait_time(endpoint, doctor):
             total_wait_time += app.wait_time
         elif app.status == 'Checked In' and app.check_in_time:
             num_appointments += 1
-            total_wait_time += datetime.datetime.now() - app.check_in_time
+
+            # TODO: fix this time/date mess
+            total_wait_time += (datetime.datetime.now() - app.check_in_time.replace(tzinfo=None)).days // 24 // 60
     
     if total_wait_time:
         return num_appointments // total_wait_time
