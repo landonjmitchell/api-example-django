@@ -170,7 +170,7 @@ class CheckInView(FormView):
 
         if not patient:
             # TODO: display patient not found error
-            pass
+            return HttpResponseRedirect(self.request.path_info)
         else:
             # Pretty sure there is a better way to do this
             self.success_url = '../demographics/' + str(patient.id)
@@ -184,7 +184,7 @@ class CheckInView(FormView):
 
             if not appointment:
                 # TODO: display no matching appointment error
-                pass
+                return HttpResponseRedirect(self.request.path_info)
             else:
                 access_token = self.request.session['access_token']
                 endpoint = AppointmentEndpoint(access_token)
