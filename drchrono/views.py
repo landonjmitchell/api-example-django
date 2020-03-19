@@ -193,7 +193,8 @@ class CheckInView(FormView):
                         'check_in_time': check_in_time}
 
                 response = endpoint.update(appointment.id, data)
-                updated_appointment, created = Appointment.objects.update_or_create(pk=appointment.id, defaults=data)
+                appointment.check_in_time = check_in_time
+                appointment.status = "Checked In"
 
                 return super(CheckInView, self).form_valid(form)
 
@@ -207,7 +208,6 @@ def update_demographics(request, patient_id):
         if form.is_valid():
             patient = form.save()
             
-            # TODO: update appointment status to Checked In
             # TODO: Display confirmation message
 
             return redirect('check_in')
