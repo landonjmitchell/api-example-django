@@ -1,7 +1,7 @@
 
 {% block appointments %}
 
-<div class="col-md-4 pt-2 float-left todays-appointments border-right bg-secondary">
+<div class="col-md-4 pt-2 pb-2 float-left todays-appointments border-right bg-secondary">
     <h5 class="pl-2 text-light">{% now "m/d/y D" %}</h5>
     {% for app in todays_appointments %}
         <a href="{% url 'appointment_detail' app.id  %}">

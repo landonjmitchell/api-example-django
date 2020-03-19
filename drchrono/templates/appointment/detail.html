@@ -13,15 +13,37 @@
     </nav>
 
     <div class="col-md-8 float-right p-4">
-
         {% if appointment %}
-        <div class="row card mb-3 mt-3">
-            <div class="card-body">
-                <h1>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</h1>
-                <p class="card-text">{{ appointment.scheduled_time}}</p>
+        <div class="card ml-0 text-left">
+            <div class="row no-gutters m-0">
+                <div class="col-md-2 ml-0">
+                    {% if appointment.patient.gender == "Male" %}
+                    <img src="../../static/images/patient_m.png" class="card-img rounded-circle bg-light m-2"
+                        style="max-width: 100px;">
+                    {% else %}
+                    <img src="../../static/images/patient_f.png" class="card-img rounded-circle bg-light m-2"
+                        style="max-width: 100px;">
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body text-left">
+                        <h5 class="card-title patient_name mb-0">{{ appointment.patient.last_name }}, {{appointment.patient.first_name }}</h5>
+                        <p class="card-text">{{ app.scheduled_time|date:"m/d" }} {{ appointment.scheduled_time|time:"H:iA" }}</p>
+
+                    </div>
+                </div>
+                <div class="col-md-4 mt-3 text-center">
+                    {% if not app.status == "" and not app.status == None %}
+                    <p>{{ app.status }}</p>
+                    {% else %}
+                    <p>--</p>
+                    {% endif %}
+                    <p>Wait Time: {{ app.wait_time }}</p>
+                </div>
             </div>
         </div>
-        <div class="row card mb-3 mt-3">
+
+        <div class="row card mb-3 mt-3 no-gutters ">
             <div class="card-body">
                 <h4>Patient Data</h4>
                 <ul>
@@ -34,51 +56,46 @@
                 </ul>
             </div>
         </div>
-        <div class="row card mb-3 mt-3">
+        <div class="row card mb-3 mt-3 no-gutters ">
             <div class="card-body">
                 <h4>Appointment Data</h4>
                 <ul>
                     <li>Exam Room: {{ appointment.exam_room }}</li>
-                    <li>Gender: {{ appointment.exam_room }}</li>
+                    <li>Gender: {{ appointment.gender }}</li>
                 </ul>
             </div>
         </div>
-        <div class="row card mb-3 mt-3">
-            <div class="card-body">
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-info" name='status' value='Checked In'> Check In
-                            </button>
-                        </form>
-                    </li>
-                    <li class="list-group-item">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary" name='status' value='In Session'> Start Visit
-                            </button>
-                        </form>
-                    </li>
-                    <li class="list-group-item">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success" name='status' value='Complete'> Complete Visit
-                            </button>
-                        </form>
-                    </li>
-                    <li class="list-group-item">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" name='status' value='Cancelled'> Cancel Visit
-                            </button>
-                        </form>
-                    </li>
+        <ul class="list-group list-group-horizontal border-0">
+            <li class="list-group-item border-0">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-info " name='status' value='Checked In'> Check In
+                    </button>
+                </form>
+            </li>
+            <li class="list-group-item border-0">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" name='status' value='In Session'> Start Visit
+                    </button>
+                </form>
+            </li>
+            <li class="list-group-item border-0">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" name='status' value='Complete'> Complete Visit
+                    </button>
+                </form>
+            </li>
+            <li class="list-group-item border-0">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" name='status' value='Cancelled'> Cancel Visit
+                    </button>
+                </form>
+            </li>
 
-                </ul>
-
-            </div>
-        </div>
+        </ul>
         {% endif %}
     </div>
 
