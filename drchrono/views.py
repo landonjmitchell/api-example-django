@@ -149,7 +149,7 @@ class CheckInView(FormView):
             # TODO: display patient not found error
             return HttpResponseRedirect(self.request.path_info)
         else:
-            # Pretty sure there is a better way to do this
+            # FIXME: pretty sure there is a better way to do this
             self.success_url = '../demographics/' + str(patient.id)
 
             # get first appointment for today that patient 
@@ -167,7 +167,6 @@ class CheckInView(FormView):
                 endpoint = AppointmentEndpoint(access_token)
                 response = endpoint.update(
                     appointment.id, {'status': 'Checked In'})
-
                 appointment.check_in()
 
                 return super(CheckInView, self).form_valid(form)
@@ -183,7 +182,6 @@ def update_demographics(request, patient_id):
             patient = form.save()
             
             # TODO: Display confirmation message
-
             return redirect('check_in')
 
     else:
