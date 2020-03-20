@@ -5,7 +5,7 @@ from endpoints import PatientEndpoint, AppointmentEndpoint, DoctorEndpoint
 
 def populate_doctors(endpoint):
     """
-    Populate Doctor table via API request.
+    Populate Doctor table.
     """
     for doctor_data in endpoint.list():
         data = {
@@ -45,8 +45,6 @@ def populate_appointments(endpoint, doctor):
         """
         Populate Appointment table with appointments belonging to the given doctor.
         """
-
-        # TODO: figure out dates/timezones
         date = timezone.now().strftime('%Y-%m-%d')
 
         appointments = endpoint.list({'doctor': doctor.id, 'date': date})
@@ -59,7 +57,8 @@ def populate_appointments(endpoint, doctor):
                 'duration': appointment_data['duration'],
                 'office': appointment_data['office'],
                 'exam_room': appointment_data['exam_room'],
-                'status': appointment_data['status']
+                'status': appointment_data['status'],
+                'reason': appointment_data['reason']
             }
 
             appointment, created = Appointment.objects.update_or_create(
@@ -74,7 +73,7 @@ def get_avg_wait_time(doctor):
 
     for app in Appointment.objects.filter(doctor=doctor):
 
-        if app.wait_time:
+        if app.wait_time is not None:
             num_appointments += 1
             total_wait_time += app.wait_time
         elif app.status == 'Checked In' and app.check_in_time:
@@ -87,5 +86,4 @@ def get_avg_wait_time(doctor):
         print (num_appointments // total_wait_time)
         return num_appointments // total_wait_time
     else:
-        print ('*********************')
         return 0
