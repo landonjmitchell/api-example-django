@@ -1,5 +1,8 @@
 {% extends "../base.html" %}
 {% block title %}Today's Appointments{% endblock %}
+{% block extra_header %}
+<script src="../../static/appointments.js"></script>
+{% endblock %}
 
 {% block body %}
 
@@ -19,16 +22,16 @@
                 <div class="col-md-2 ml-0">
                     {% if appointment.patient.gender == "Male" %}
                     <img src="../../static/images/patient_m.png" class="card-img m-2"
-                        style="max-width: 150px;">
+                        style="max-width: 125px;">
                     {% else %}
                     <img src="../../static/images/patient_f.png" class="card-img m-2"
-                        style="max-width: 150px;">
+                        style="max-width: 125px;">
                     {% endif %}
                 </div>
                 <div class="col-md-6">
                     <div class="card-body text-left">
                         <h3 class="card-title patient_name mb-0">{{ appointment.patient.last_name }}, {{appointment.patient.first_name }}</h3>
-                        <p class="card-text">{{ appointment.scheduled_time|time:"H:iA" }}</p>
+                        <p class="card-text">(DOB: {{ appointment.patient.date_of_birth }})</p>
 
                     </div>
                 </div>
@@ -50,9 +53,6 @@
         <div class="card-body">
             <h5 class="card-title">Patient Data</h5>
             <dl class="row">
-                <dt class="col-sm-3">Date of Birth:</dt>
-                <dd class="col-sm-9">{{ appointment.patient.date_of_birth }}</dd>
-            
                 <dt class="col-sm-3">Gender:</dt>
                 <dd class="col-sm-9"> {{ appointment.patient.gender }}</dd>
             
@@ -78,8 +78,11 @@
                 <dt class="col-sm-3">Exam Room:</dt>
                 <dd class="col-sm-9">{{ appointment.exam_room }}</dd>
     
+                <dt class="col-sm-3">Scheduled Time:</dt>
+                <dd class="col-sm-9"> {{ appointment.scheduled_time|time:"H:iA" }}</dd>
+
                 <dt class="col-sm-3">Check In Time:</dt>
-                <dd class="col-sm-9"> {{ appointment.check_in_time }}</dd>
+                <dd class="col-sm-9"> {{ appointment.check_in_time|time:"H:iA" }}</dd>
     
                 <dt class="col-sm-3">Duration:</dt>
                 <dd class="col-sm-9">{{ appointment.duration}} min</dd>
@@ -92,28 +95,28 @@
             <li class="list-group-item border-0">
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-info " name='status' value='Checked In'> Check In
+                    <button type="submit" class="btn btn-success " name='status' value='Checked In'> Check In
                     </button>
                 </form>
             </li>
             <li class="list-group-item border-0">
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary" name='status' value='In Session'> Start Visit
+                    <button type="submit" class="btn btn-info" name='status' value='In Session'> Start Visit
                     </button>
                 </form>
             </li>
             <li class="list-group-item border-0">
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-success" name='status' value='Complete'> Complete Visit
+                    <button type="submit" class="btn btn-primary" name='status' value='Complete'> Complete Visit
                     </button>
                 </form>
             </li>
             <li class="list-group-item border-0">
-                <form method="POST">
+                <form method="POST" id="cancel-app">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger" name='status' value='Cancelled'> Cancel Visit
+                    <button  id="cancel-button" type="submit" class="btn btn-danger" name='status' value='Cancelled'> Cancel Appointment
                     </button>
                 </form>
             </li>
