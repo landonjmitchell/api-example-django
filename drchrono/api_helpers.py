@@ -79,8 +79,7 @@ def get_avg_wait_time(doctor):
     num_appointments = 0
     total_wait_time = 0
 
-    for app in Appointment.objects.filter(doctor=doctor):
-
+    for app in Appointment.objects.filter(doctor=doctor.id):
         if app.wait_time is not None:
             num_appointments += 1
             total_wait_time += app.wait_time
@@ -90,8 +89,9 @@ def get_avg_wait_time(doctor):
             wait_time = delta.total_seconds() // 60
             total_wait_time += wait_time
 
-    if total_wait_time:
-        print (num_appointments // total_wait_time)
-        return num_appointments // total_wait_time
+    if num_appointments:
+        return (total_wait_time // num_appointments)
     else:
         return 0
+
+         
