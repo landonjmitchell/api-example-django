@@ -4,19 +4,23 @@
 
 {% block body %}
 
-<h2>Update Demographics</h2>
+    <div class="row w-50 bg-dark text-light p-5 text-center m-auto">
+        <div class="col float-center">
+            <h2>You're Checked In!</h2>
+            <h5>Update your info if needed</h5>
+            <form action="" method="post" class="demographics">
+                {% csrf_token %}
+                <table>
+                    {{ form }}
+                    <tr>
+                        <td></td>
+                        <td><input type="submit"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
 
-<!-- TODO: Implement crispy-forms -->
 
-<form action="" method="post">
-    {% csrf_token %}
-    <table>
-        {{ form }}
-        <tr>
-            <td></td>
-            <td><input type="submit"></td>
-        </tr>
-    </table>
-</form>
 
 {% endblock %}

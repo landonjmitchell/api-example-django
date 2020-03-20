@@ -1,33 +1,33 @@
 {% extends "../base.html" %}
-{% block title %}Welcome to drchrono{% endblock %}
+{% block title %}Today's Appointments{% endblock %}
 
 {% block body %}
 
-    <nav class="navbar navbar-dark bg-primary navbar-expand-lg p-2">
+    <nav class="navbar navbar-dark text-light navbar-expand-lg p-4">
         <div class="container-fluid">
-            <h1 class="text-light">Welcome Dr. {{ doctor.last_name }}</h1>
+            <h2>Dr. {{ doctor.last_name }}'s Appointments</h2>
         </div>
         <div class='w-25'>
             <p>Average Wait Time: {{ avg_wait_time }} min</p>
         </div>
     </nav>
 
-    <div class="col-md-8 float-right p-4">
+    <div class="col-md-8 float-right appointment-detail p-2">
         {% if appointment %}
         <div class="card ml-0 text-left">
             <div class="row no-gutters m-0">
                 <div class="col-md-2 ml-0">
                     {% if appointment.patient.gender == "Male" %}
-                    <img src="../../static/images/patient_m.png" class="card-img rounded-circle bg-light m-2"
-                        style="max-width: 100px;">
+                    <img src="../../static/images/patient_m.png" class="card-img m-2"
+                        style="max-width: 150px;">
                     {% else %}
-                    <img src="../../static/images/patient_f.png" class="card-img rounded-circle bg-light m-2"
-                        style="max-width: 100px;">
+                    <img src="../../static/images/patient_f.png" class="card-img m-2"
+                        style="max-width: 150px;">
                     {% endif %}
                 </div>
                 <div class="col-md-6">
                     <div class="card-body text-left">
-                        <h5 class="card-title patient_name mb-0">{{ appointment.patient.last_name }}, {{appointment.patient.first_name }}</h5>
+                        <h3 class="card-title patient_name mb-0">{{ appointment.patient.last_name }}, {{appointment.patient.first_name }}</h3>
                         <p class="card-text">{{ appointment.scheduled_time|time:"H:iA" }}</p>
 
                     </div>
@@ -45,31 +45,50 @@
             </div>
         </div>
 
-        <div class="row card mb-3 mt-3 no-gutters ">
-            <div class="card-body">
-                <h4>Patient Data</h4>
-                <ul>
-                    <li>DOB: {{ appointment.patient.date_of_birth }}</li>
-                    <li>Gender: {{ appointment.patient.gender }}</li>
-                    <li>Email: {{ appointment.patient.email }}</li>
-                    <li>Phone: {{ appointment.patient.home_phone }}</li>
-                    <li>SSN: {{ appointment.patient.social_security_number }}</li>
 
-                </ul>
-            </div>
+    <div class="row card mb-3 mt-3 no-gutters text-left">
+        <div class="card-body">
+            <h5 class="card-title">Patient Data</h5>
+            <dl class="row">
+                <dt class="col-sm-3">Date of Birth:</dt>
+                <dd class="col-sm-9">{{ appointment.patient.date_of_birth }}</dd>
+            
+                <dt class="col-sm-3">Gender:</dt>
+                <dd class="col-sm-9"> {{ appointment.patient.gender }}</dd>
+            
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">{{ appointment.patient.email }}</dd>
+            
+                <dt class="col-sm-3">Home Phone:</dt>
+                <dd class="col-sm-9">{{ appointment.patient.home_phone }}</dd>
+
+                <dt class="col-sm-3">SSN:</dt>
+                <dd class="col-sm-9">{{ appointment.patient.social_security_number }}</dd>
+            </dl>
         </div>
-        <div class="row card mb-3 mt-3 no-gutters ">
-            <div class="card-body">
-                <h4>Appointment Data</h4>
-                <ul>
-                    <li>Reason for Visit: {{ appointment.reason }}</li>
-                    <li>Check In Time: {{ appointment.check_in_time }}</li>
-                    <li>Exam Room: {{ appointment.exam_room }}</li>
-                    <li>Gender: {{ appointment.patient.gender }}</li>
-                </ul>
-            </div>
+    </div>
+
+    <div class="row card mb-3 mt-3 no-gutters text-left ">
+        <div class="card-body">
+            <h5 class="card-title">Appointment Data</h5>
+            <dl class="row">
+                <dt class="col-sm-3">Reason for Visit:</dt>
+                <dd class="col-sm-9">{{ appointment.reason }}</dd>
+    
+                <dt class="col-sm-3">Check In Time:</dt>
+                <dd class="col-sm-9"> {{ appointment.check_in_time }}</dd>
+    
+                <dt class="col-sm-3">Exam Room:</dt>
+                <dd class="col-sm-9">{{ appointment.exam_room }}</dd>
+    
+                <dt class="col-sm-3">Home Phone:</dt>
+                <dd class="col-sm-9">{{ appointment.patient.home_phone }}</dd>
+    
+            </dl>
         </div>
-        <ul class="list-group list-group-horizontal border-0">
+    </div>
+
+        <ul class="list-group list-group-horizontal text-left border-0">
             <li class="list-group-item border-0">
                 <form method="POST">
                     {% csrf_token %}
@@ -100,6 +119,8 @@
             </li>
 
         </ul>
+        {% else %}
+        <img src="../../static/images/drchronologo.png" class="logo-img mt-5">
         {% endif %}
     </div>
 

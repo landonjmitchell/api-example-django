@@ -1,0 +1,68 @@
+body {
+	font-family: "Roboto", sans-serif;
+	font-size: 16px;
+	background-color: #fdfdfd;
+}
+
+a, a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.navbar {
+    background-color: #306CC6;
+    border-radius: 20% 20% 0% 0%;
+}
+
+img.card-img {
+    border-radius: 0 50% 50% 50%;
+    background-color: lightsteelblue;
+}
+
+
+/* appointments */
+
+.todays-appointments {
+    background-color: #CCC;
+    border-right: 1px solid  #AAA
+}
+
+.todays-appointments h5 {
+    color: black;
+}
+
+.appointment-card {
+    background-color: white;
+    margin-bottom: 1px;
+}
+
+.appointment-card:hover {
+    background-color:  lightsteelblue;
+}
+
+.wait-time {
+    font-size: 13px;
+    color: #333
+}
+
+.appointment-detail {
+    text-align: center;
+}
+
+.logo-img {
+    max-width: 50%
+}
+
+/* forms  */
+
+form label {
+    margin-top: 20px;
+}
+
+.demographics input[type=text], input[type=email] {
+    width: 350px;
+}
+
+select {
+    float: left;
+}
