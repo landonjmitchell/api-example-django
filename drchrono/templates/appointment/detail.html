@@ -74,15 +74,15 @@
             <dl class="row">
                 <dt class="col-sm-3">Reason for Visit:</dt>
                 <dd class="col-sm-9">{{ appointment.reason }}</dd>
+
+                <dt class="col-sm-3">Exam Room:</dt>
+                <dd class="col-sm-9">{{ appointment.exam_room }}</dd>
     
                 <dt class="col-sm-3">Check In Time:</dt>
                 <dd class="col-sm-9"> {{ appointment.check_in_time }}</dd>
     
-                <dt class="col-sm-3">Exam Room:</dt>
-                <dd class="col-sm-9">{{ appointment.exam_room }}</dd>
-    
-                <dt class="col-sm-3">Home Phone:</dt>
-                <dd class="col-sm-9">{{ appointment.patient.home_phone }}</dd>
+                <dt class="col-sm-3">Duration:</dt>
+                <dd class="col-sm-9">{{ appointment.duration}} min</dd>
     
             </dl>
         </div>
