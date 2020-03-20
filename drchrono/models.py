@@ -48,6 +48,7 @@ class Appointment(models.Model):
     duration = models.IntegerField()
     office = models.IntegerField()
     exam_room = models.IntegerField()
+    reason = models.CharField(max_length=2000, blank=True)
     status = models.CharField(max_length=20, null=True)
     check_in_time = models.DateTimeField(null=True)
     start_time = models.DateTimeField(null=True)
