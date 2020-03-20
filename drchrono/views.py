@@ -72,8 +72,6 @@ class DoctorWelcome(TemplateView):
 class AppointmentsView(TemplateView):
     template_name = 'appointment/detail.html'
 
-    # FIXME: simplify getting doctor and average wait time
-    
     def get_context_data(self, **kwargs):
         context = super(AppointmentsView, self).get_context_data(**kwargs)
 
@@ -94,14 +92,13 @@ class AppointmentDetailView(DetailView):
     context_object_name = 'appointment'
     form_class = StatusForm
 
-    # FIXME: simplify getting doctor and average wait time
     def get_context_data(self, **kwargs):
         context = super(AppointmentDetailView, self).get_context_data(**kwargs)
 
         doctor_id = self.request.session['doctor_id']
         doctor = Doctor.objects.get(pk=doctor_id)
         wait_time = api_helpers.get_avg_wait_time(doctor)
-        
+
         context['avg_wait_time'] = wait_time
         context['doctor'] = doctor
 
