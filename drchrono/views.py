@@ -152,13 +152,12 @@ class CheckInView(FormView):
             # Pretty sure there is a better way to do this
             self.success_url = '../demographics/' + str(patient.id)
 
-            # Disabled for testing 
-            # Ensure appointment is for today and not already checked in
-            # date = datetime.datetime.today()
-            # statuses = ['', None]
-            # appointment = Appointment.objects.filter(patient=patient, status__in=statuses).first()
-
-            appointment = Appointment.objects.filter(patient=patient).first()
+            # get first appointment for today that patient 
+            # is not already checked in for
+            statuses = ['', None]
+            date = timezone.now().date()
+            appointment = Appointment.objects.filter(
+                patient=patient, scheduled_time__date=date, status__in=statuses).first()
 
             if not appointment:
                 # TODO: display no matching appointment error
@@ -166,13 +165,10 @@ class CheckInView(FormView):
             else:
                 access_token = self.request.session['access_token']
                 endpoint = AppointmentEndpoint(access_token)
-                check_in_time = timezone.now()
-                data = {'status': 'Checked In', 
-                        'check_in_time': check_in_time}
+                response = endpoint.update(
+                    appointment.id, {'status': 'Checked In'})
 
-                response = endpoint.update(appointment.id, data)
-                appointment.check_in_time = check_in_time
-                appointment.status = "Checked In"
+                appointment.check_in()
 
                 return super(CheckInView, self).form_valid(form)
 
