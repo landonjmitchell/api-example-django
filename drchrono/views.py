@@ -145,33 +145,23 @@ class CheckInView(FormView):
                     social_security_number=social_security_number
                     ).first()
 
-        if not patient:
-            # TODO: display patient not found error
-            return HttpResponseRedirect(self.request.path_info)
-        else:
-            # FIXME: pretty sure there is a better way to do this
-            self.success_url = '../demographics/' + str(patient.id)
+        # FIXME: pretty sure there is a better way to do this
+        self.success_url = '../demographics/' + str(patient.id)
 
-            # get first appointment for today that patient 
-            # is not already checked in for
-            statuses = ['', None]
-            date = timezone.now().date()
-            appointment = Appointment.objects.filter(
-                patient=patient, scheduled_time__date=date, status__in=statuses).first()
+        # get first appointment for today that patient 
+        # is not already checked in for
+        statuses = ['', None]
+        date = timezone.now().date()
+        appointment = Appointment.objects.filter(
+            patient=patient, scheduled_time__date=date, status__in=statuses).first()
 
-            if not appointment:
-                # TODO: display no matching appointment error
-                return HttpResponseRedirect(self.request.path_info)
-            else:
-                access_token = self.request.session['access_token']
-                endpoint = AppointmentEndpoint(access_token)
-                response = endpoint.update(
-                    appointment.id, {'status': 'Checked In'})
-                appointment.check_in()
+        access_token = self.request.session['access_token']
+        endpoint = AppointmentEndpoint(access_token)
+        response = endpoint.update(
+            appointment.id, {'status': 'Checked In'})
+        appointment.check_in()
 
-                return super(CheckInView, self).form_valid(form)
-
-        # TODO: deal with invalid form
+        return super(CheckInView, self).form_valid(form)
 
 # TODO: convert to class based view for consistency
 def update_demographics(request, patient_id):

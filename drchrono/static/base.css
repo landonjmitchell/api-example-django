@@ -19,6 +19,15 @@ img.card-img {
     background-color: lightsteelblue;
 }
 
+/* check in  */
+
+ul.errorlist {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    color: red;
+}
 
 /* appointments */
 
