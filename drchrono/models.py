@@ -76,6 +76,8 @@ class Appointment(models.Model):
     def cancel(self):
         self.status = "Cancelled"
         self.wait_time = 0
+        
+        self.save()
 
     class Meta:
         ordering = ['scheduled_time']
