@@ -1,5 +1,4 @@
-import datetime
-import pytz
+from django.utils import timezone
 
 from .models import Doctor, Patient, Appointment
 from endpoints import PatientEndpoint, AppointmentEndpoint, DoctorEndpoint
@@ -48,8 +47,7 @@ def populate_appointments(endpoint, doctor):
         """
 
         # TODO: figure out dates/timezones
-        date = datetime.datetime.now(tz=pytz.timezone(
-            'America/Los_Angeles')).strftime('%Y-%m-%d')
+        date = timezone.now().strftime('%Y-%m-%d')
 
         appointments = endpoint.list({'doctor': doctor.id, 'date': date})
         for appointment_data in appointments:
@@ -67,25 +65,27 @@ def populate_appointments(endpoint, doctor):
             appointment, created = Appointment.objects.update_or_create(
                 defaults=data, pk=appointment_data['id'])
 
-def get_avg_wait_time(endpoint, doctor):
+def get_avg_wait_time(doctor):
     """
     Return average wait time for doctor for all appointments.
     """
     num_appointments = 0
     total_wait_time = 0
 
-    for app in Appointment.objects.all():
-        if app.wait_time and app.status in ('Complete', 'In Session'):
+    for app in Appointment.objects.filter(doctor=doctor):
+
+        if app.wait_time:
             num_appointments += 1
             total_wait_time += app.wait_time
         elif app.status == 'Checked In' and app.check_in_time:
             num_appointments += 1
+            delta = (timezone.now() - app.check_in_time)
+            wait_time = delta.total_seconds() // 60
+            total_wait_time += wait_time
 
-            # TODO: fix this time/date mess
-            total_wait_time += (datetime.datetime.now() - app.check_in_time.replace(tzinfo=None)).days // 24 // 60
-    
     if total_wait_time:
+        print (num_appointments // total_wait_time)
         return num_appointments // total_wait_time
     else:
+        print ('*********************')
         return 0
-

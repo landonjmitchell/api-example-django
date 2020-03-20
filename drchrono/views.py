@@ -1,13 +1,8 @@
-import datetime
-
 from django.views.generic import TemplateView, DetailView, FormView
-from social_django.models import UserSocialAuth
 from django.http import HttpResponseRedirect
-
-from django.shortcuts import (
-    redirect,
-    render,
-    get_object_or_404)
+from django.shortcuts import (redirect, render, get_object_or_404)
+from django.utils import timezone
+from social_django.models import UserSocialAuth
 
 from drchrono.endpoints import (
     DoctorEndpoint, 
@@ -54,7 +49,6 @@ class DoctorWelcome(TemplateView):
         self.request.session['access_token'] = access_token
 
         # Populate patient and appointment tables with patients and appointments for the given doctor.
-
         patient_endpoint = PatientEndpoint(access_token)
         api_helpers.populate_patients(patient_endpoint, doctor)
         appointment_endpoint = AppointmentEndpoint(access_token)
@@ -83,14 +77,10 @@ class AppointmentsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AppointmentsView, self).get_context_data(**kwargs)
 
-        access_token = self.request.session['access_token']
         doctor_id = self.request.session['doctor_id']
+        doctor = Doctor.objects.get(pk=doctor_id)
+        wait_time = api_helpers.get_avg_wait_time(doctor)
 
-        doctor_endpoint = DoctorEndpoint(access_token)
-        doctor = doctor_endpoint.fetch(doctor_id)
-
-        appointment_endpoint = AppointmentEndpoint(access_token)
-        wait_time = api_helpers.get_avg_wait_time(appointment_endpoint, doctor)
         context['avg_wait_time'] = wait_time
         context['doctor'] = doctor
         context['appointment'] = False
@@ -108,12 +98,10 @@ class AppointmentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AppointmentDetailView, self).get_context_data(**kwargs)
 
-        access_token = self.request.session['access_token']
         doctor_id = self.request.session['doctor_id']
         doctor = Doctor.objects.get(pk=doctor_id)
-
-        appointment_endpoint = AppointmentEndpoint(access_token)
-        wait_time = api_helpers.get_avg_wait_time(appointment_endpoint, doctor)
+        wait_time = api_helpers.get_avg_wait_time(doctor)
+        
         context['avg_wait_time'] = wait_time
         context['doctor'] = doctor
 
@@ -126,29 +114,21 @@ class AppointmentDetailView(DetailView):
         if form.is_valid():
             status = form.cleaned_data['status']
             access_token = self.request.session['access_token']
-
             appointment_endpoint = AppointmentEndpoint(access_token)
             response = appointment_endpoint.update(appointment_id, {'status': status})
 
             # FIXME: find a better way to update/refresh template view
-            access_token = self.request.session['access_token']
             doctor_id = self.request.session['doctor_id']
             doctor = Doctor.objects.get(pk=doctor_id)
             api_helpers.populate_appointments(appointment_endpoint, doctor)
 
-            # TODO: move logic to model methods?
             app = Appointment.objects.get(pk=appointment_id)
             if status == 'Checked In':
-                app.check_in_time = datetime.datetime.now()
+                app.check_in()
             elif status == 'In Session':
-                app.start_time = datetime.datetime.now()
-                if app.check_in_time:
-                    app.wait_time = app.start_time.replace(
-                        tzinfo=None) - app.check_in_time.replace(tzinfo=None)
-                else:
-                    app.wait_time = 0
+                app.start()
             elif status == 'Cancelled':
-                app.wait_time = 0
+                app.cancel()
 
         return HttpResponseRedirect(self.request.path_info)
 
@@ -175,7 +155,8 @@ class CheckInView(FormView):
             # Pretty sure there is a better way to do this
             self.success_url = '../demographics/' + str(patient.id)
 
-            # TODO: Ensure appointment is for today and not already checked in
+            # Disabled for testing 
+            # Ensure appointment is for today and not already checked in
             # date = datetime.datetime.today()
             # statuses = ['', None]
             # appointment = Appointment.objects.filter(patient=patient, status__in=statuses).first()
@@ -188,7 +169,7 @@ class CheckInView(FormView):
             else:
                 access_token = self.request.session['access_token']
                 endpoint = AppointmentEndpoint(access_token)
-                check_in_time = datetime.datetime.now()
+                check_in_time = timezone.now()
                 data = {'status': 'Checked In', 
                         'check_in_time': check_in_time}
 

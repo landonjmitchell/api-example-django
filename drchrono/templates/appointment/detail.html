@@ -7,8 +7,8 @@
         <div class="container-fluid">
             <h1 class="text-light">Welcome Dr. {{ doctor.last_name }}</h1>
         </div>
-        <div>
-            <p>Average Wait Time: {{ avg_wait_time }}</p>
+        <div class='w-25'>
+            <p>Average Wait Time: {{ avg_wait_time }} min</p>
         </div>
     </nav>
 
@@ -28,17 +28,19 @@
                 <div class="col-md-6">
                     <div class="card-body text-left">
                         <h5 class="card-title patient_name mb-0">{{ appointment.patient.last_name }}, {{appointment.patient.first_name }}</h5>
-                        <p class="card-text">{{ app.scheduled_time|date:"m/d" }} {{ appointment.scheduled_time|time:"H:iA" }}</p>
+                        <p class="card-text">{{ appointment.scheduled_time|time:"H:iA" }}</p>
 
                     </div>
                 </div>
                 <div class="col-md-4 mt-3 text-center">
-                    {% if not app.status == "" and not app.status == None %}
-                    <p>{{ app.status }}</p>
+                    {% if not appointment.status == "" and not appointment.status == None %}
+                    <p>{{ appointment.status }}</p>
                     {% else %}
                     <p>--</p>
                     {% endif %}
-                    <p>Wait Time: {{ app.wait_time }}</p>
+                    {% if appointment.wait_time %}
+                    <p>Wait Time: {{ appointment.wait_time }} min</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -60,8 +62,9 @@
             <div class="card-body">
                 <h4>Appointment Data</h4>
                 <ul>
+                    <li>Check In Time: {{ appointment.check_in_time }}</li>
                     <li>Exam Room: {{ appointment.exam_room }}</li>
-                    <li>Gender: {{ appointment.gender }}</li>
+                    <li>Gender: {{ appointment.patient.gender }}</li>
                 </ul>
             </div>
         </div>

@@ -27,7 +27,11 @@
                     {% else %}
                     <p>--</p>
                     {% endif %}
-                    <p>Wait Time: {{ app.wait_time }}</p>
+                    {% if app.wait_time %}
+                    <p>Wait Time: {{ app.wait_time }} min</p>
+                    {% else %}
+                    <p>--</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

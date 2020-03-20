@@ -1,6 +1,5 @@
-import datetime
-
 from django.db import models
+from django.utils import timezone
 
 
 class Doctor(models.Model):
@@ -53,6 +52,29 @@ class Appointment(models.Model):
     check_in_time = models.DateTimeField(null=True)
     start_time = models.DateTimeField(null=True)
     wait_time = models.IntegerField(null=True)
+
+    def check_in(self):
+        self.status = "Checked In"
+        date = timezone.now()
+        self.check_in_time = date
+
+        self.save()
+
+    def start(self):
+        self.status = "In Session"
+        date = timezone.now()
+        self.start_time = date
+
+        if self.check_in_time:
+            self.wait_time = (self.start_time - self.check_in_time).total_seconds() // 60
+        else:
+            self.wait_time = 0
+
+        self.save()
+
+    def cancel(self):
+        self.status = "Cancelled"
+        self.wait_time = 0
 
     class Meta:
         ordering = ['scheduled_time']
