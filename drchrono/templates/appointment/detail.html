@@ -8,7 +8,7 @@
             <h2>Dr. {{ doctor.last_name }}'s Appointments</h2>
         </div>
         <div class='w-25'>
-            <p>Average Wait Time: {{ avg_wait_time }} min</p>
+            <p>Average Wait Time: {{ avg_wait_time|floatformat }} min</p>
         </div>
     </nav>
 

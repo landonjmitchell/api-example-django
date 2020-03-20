@@ -31,12 +31,17 @@ img.card-img {
     color: black;
 }
 
-.appointment-card {
+.unselected.appointment {
     background-color: white;
     margin-bottom: 1px;
 }
 
-.appointment-card:hover {
+.selected.appointment {
+    background-color: lightsteelblue;
+    margin-bottom: 1px;
+}
+
+.appointment:hover {
     background-color:  lightsteelblue;
 }
 

@@ -1,12 +1,27 @@
 
 {% block appointments %}
 
+
+
+
 <div class="col-md-4 pt-2 pb-2 pl-0 pr-0 float-left todays-appointments">
     <h5 class="pl-2">{% now "m/d/y D" %}</h5>
     {% for app in todays_appointments %}
+
+        {% if appointment and appointment.id == app.id %}
+        <a>
+        {% else %}
         <a href="{% url 'appointment_detail' app.id  %}">
+        {% endif %}
+
         <div class="text-left">
-            <div class="row no-gutters appointment-card">
+
+            {% if appointment and appointment.id == app.id %}
+            <div class="row no-gutters selected appointment">
+            {% else %}
+            <div class="row no-gutters unselected appointment">
+            {% endif %}
+
                 <div class="col-md-2">
                     {% if app.patient.gender == "Male" %}
                         <img src="../../static/images/patient_m.png" class="card-img m-2" style="max-width: 100px;">
@@ -14,6 +29,7 @@
                         <img src="../../static/images/patient_f.png" class="card-img m-2" style="max-width: 100px;">
                     {% endif %}
                 </div>
+
                 <div class="col-md-6">
                     <div class="card-body text-left">
                         <h5 class="card-title patient_name mb-0">{{ app.patient.last_name }}, {{app.patient.first_name }}</h5>
@@ -21,6 +37,7 @@
                         
                     </div>
                 </div>
+
                 <div class="col-md-4 mt-3 text-center">
                     {% if not app.status == "" and not app.status == None %}
                     <p>{{ app.status }}</p>
