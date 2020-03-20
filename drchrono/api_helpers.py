@@ -50,6 +50,14 @@ def populate_appointments(endpoint, doctor):
         appointments = endpoint.list({'doctor': doctor.id, 'date': date})
         for appointment_data in appointments:
             patient = Patient.objects.get(id=appointment_data['patient'])
+
+            # simplify/clean statuses for project purposes
+            status = appointment_data['status']
+            if status not in ('Checked In', 'In Session', 
+                              'Complete', 'Cancelled'):
+                status = ''
+
+
             data = {
                 'doctor': doctor,
                 'patient': patient,
@@ -57,7 +65,7 @@ def populate_appointments(endpoint, doctor):
                 'duration': appointment_data['duration'],
                 'office': appointment_data['office'],
                 'exam_room': appointment_data['exam_room'],
-                'status': appointment_data['status'],
+                'status': status,
                 'reason': appointment_data['reason']
             }
 
