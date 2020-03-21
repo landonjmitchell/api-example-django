@@ -93,23 +93,23 @@
 
         <ul class="list-group list-group-horizontal text-left border-0">
             <li class="list-group-item border-0">
-                <form method="POST">
+                <form method="POST" id="check-in-app">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-success " name='status' value='Checked In'> Check In
+                    <button id="check-in-button" type="submit" class="btn btn-success " name='status' value='Checked In'> Check In
                     </button>
                 </form>
             </li>
             <li class="list-group-item border-0">
-                <form method="POST">
+                <form method="POST" id="start-app">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-info" name='status' value='In Session'> Start Visit
+                    <button id="start-button" type="submit" class="btn btn-info" name='status' value='In Session'> Start Visit
                     </button>
                 </form>
             </li>
             <li class="list-group-item border-0">
-                <form method="POST">
+                <form method="POST" id="complete-app">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary" name='status' value='Complete'> Complete Visit
+                    <button id="complte-button" type="submit" class="btn btn-primary" name='status' value='Complete'> Complete Visit
                     </button>
                 </form>
             </li>

@@ -33,7 +33,12 @@ class CheckInForm(forms.Form):
 
         # verify appointment for patient today that has not already
         # been checked in to
-        statuses = ['', None]
+
+        # for testing/dubugging:
+        # statuses = ['', None]
+        statuses = ['', None, 'Checked In',
+                    'In Session', 'Complete', 'Cancelled']
+                    
         date = timezone.now().date()
         appointment = Appointment.objects.filter(
             patient=patient, 

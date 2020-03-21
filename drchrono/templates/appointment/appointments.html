@@ -1,25 +1,16 @@
 
 {% block appointments %}
 
-
-
-
 <div class="col-md-4 pt-2 pb-2 pl-0 pr-0 float-left todays-appointments">
     <h5 class="pl-2">{% now "m/d/y D" %}</h5>
     {% for app in todays_appointments %}
 
-        {% if appointment and appointment.id == app.id %}
-        <a>
-        {% else %}
-        <a href="{% url 'appointment_detail' app.id  %}">
-        {% endif %}
-
         <div class="text-left">
 
             {% if appointment and appointment.id == app.id %}
-            <div class="row no-gutters selected appointment">
+            <div id="{{ app.id }}" class="app-card row no-gutters selected appointment">
             {% else %}
-            <div class="row no-gutters unselected appointment">
+            <div id="{{ app.id }}" class="app-card row no-gutters unselected appointment">
             {% endif %}
 
                 <div class="col-md-2">
@@ -40,15 +31,17 @@
 
                 <div class="col-md-4 mt-3 text-center">
                     {% if not app.status == "" and not app.status == None %}
-                    <p>{{ app.status }}</p>
+                    <p class='status'>{{ app.status }}</p>
                     {% else %}
                     <p>--</p>
                     {% endif %}
+
                     {% if app.wait_time %}
-                    <p class="wait-time">Wait Time: {{ app.wait_time }} min</p>
+                    <p id="{{ app.id }}-wait-time" class="wait-time">Wait Time: {{ app.wait_time }} min</p>
                     {% else %}
                     <p>--</p>
                     {% endif %}
+
                 </div>
             </div>
         </div>

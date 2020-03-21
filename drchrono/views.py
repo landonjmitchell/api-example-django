@@ -150,7 +150,11 @@ class CheckInView(FormView):
 
         # get first appointment for today that patient 
         # is not already checked in for
-        statuses = ['', None]
+
+        # for testing/dubugging:
+        # statuses = ['', None]
+        statuses = ['', None, 'Checked In', 'In Session', 'Complete', 'Cancelled']
+
         date = timezone.now().date()
         appointment = Appointment.objects.filter(
             patient=patient, scheduled_time__date=date, status__in=statuses).first()
