@@ -11,7 +11,7 @@ from drchrono.endpoints import (
 
 from .models import Doctor, Appointment, Patient
 from .forms import StatusForm, CheckInForm, DemographicForm
-import api_helpers
+import utils
 
 
 class SetupView(TemplateView):
@@ -42,7 +42,7 @@ class DoctorWelcome(TemplateView):
 
         access_token = self.get_token()
         doctor_endpoint = DoctorEndpoint(access_token)
-        api_helpers.populate_doctors(doctor_endpoint)
+        utils.populate_doctors(doctor_endpoint)
         doctor = Doctor.objects.first()
 
         self.request.session['doctor_id'] = doctor.id
@@ -50,9 +50,9 @@ class DoctorWelcome(TemplateView):
 
         # Populate patient and appointment tables with patients and appointments for the given doctor.
         patient_endpoint = PatientEndpoint(access_token)
-        api_helpers.populate_patients(patient_endpoint, doctor)
+        utils.populate_patients(patient_endpoint, doctor)
         appointment_endpoint = AppointmentEndpoint(access_token)
-        api_helpers.populate_appointments(appointment_endpoint, doctor)
+        utils.populate_appointments(appointment_endpoint, doctor)
 
         return doctor
 
@@ -77,7 +77,7 @@ class AppointmentsView(TemplateView):
 
         doctor_id = self.request.session['doctor_id']
         doctor = Doctor.objects.get(pk=doctor_id)
-        wait_time = api_helpers.get_avg_wait_time(doctor)
+        wait_time = utils.get_avg_wait_time(doctor)
 
         context['avg_wait_time'] = wait_time
         context['doctor'] = doctor
@@ -97,7 +97,7 @@ class AppointmentDetailView(DetailView):
 
         doctor_id = self.request.session['doctor_id']
         doctor = Doctor.objects.get(pk=doctor_id)
-        wait_time = api_helpers.get_avg_wait_time(doctor)
+        wait_time = utils.get_avg_wait_time(doctor)
 
         context['avg_wait_time'] = wait_time
         context['doctor'] = doctor
@@ -117,7 +117,7 @@ class AppointmentDetailView(DetailView):
             # FIXME: find a better way to update/refresh template view
             doctor_id = self.request.session['doctor_id']
             doctor = Doctor.objects.get(pk=doctor_id)
-            api_helpers.populate_appointments(appointment_endpoint, doctor)
+            utils.populate_appointments(appointment_endpoint, doctor)
 
             app = Appointment.objects.get(pk=appointment_id)
             if status == 'Checked In':

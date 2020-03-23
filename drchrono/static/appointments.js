@@ -10,6 +10,8 @@ function documentReady() {
         e.preventDefault();
         selectApp(e);
     }));
+
+    $('#show-breaks').on('click', showBreaks)
 }
 
 function warnCancel(e) {
@@ -43,5 +45,9 @@ function selectApp(e) {
         window.location.href = `http://localhost:8000/appointment/${appID}`;
     }
 
+}
 
+function showBreaks(e) {
+    // TODO: update button text [show, hide]
+    // implement show/hide breaks (scheduled, unscheduled)
 }

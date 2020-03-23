@@ -2,7 +2,16 @@
 {% block appointments %}
 
 <div class="col-md-4 pt-2 pb-2 pl-0 pr-0 float-left todays-appointments">
-    <h5 class="pl-2">{% now "m/d/y D" %}</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="pl-2">{% now "m/d/y D" %}</h5>
+        </div>
+        <div class="col-md-6">
+            <button id="show-breaks" type="submit" class="btn btn-success mb-2 mr-2  float-right" name='breaks'> Show Breaks
+            </button>
+        </div>
+    </div>
+    
     {% for app in todays_appointments %}
 
         <div class="text-left">

@@ -94,4 +94,8 @@ def get_avg_wait_time(doctor):
     else:
         return 0
 
-         
+def get_beaks(doctor):
+    """
+    Populate breaks in doctor's daily schedule based on time and duration of current appointments. Uses cancelled appointment times as break times.
+    """
+    pass
