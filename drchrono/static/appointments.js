@@ -39,7 +39,8 @@ function selectApp(e) {
 
     // refresh if a new app is selected
     if (appID != currentAppID) {
-        window.location.href = `../${appID}`;
+        // FIXME: de-hardcode base url
+        window.location.href = `http://localhost:8000/appointment/${appID}`;
     }
 
 
